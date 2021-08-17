@@ -1,2 +1,2 @@
-# Acerca
+# OUTPUT
 Output de la aplicación.
