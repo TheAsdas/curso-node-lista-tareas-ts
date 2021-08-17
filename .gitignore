@@ -1,0 +1,10 @@
+#output
+/output/*
+!/output/acerca.md
+
+#node Modules
+/node_modules
+
+#dist
+/dist/*
+!/dist/acerca.md
