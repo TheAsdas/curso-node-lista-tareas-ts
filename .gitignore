@@ -1,10 +1,10 @@
 #output
 /output/*
-!/output/acerca.md
+!/output/README.md
 
 #node Modules
 /node_modules
 
 #dist
 /dist/*
-!/dist/acerca.md
+!/dist/README.md

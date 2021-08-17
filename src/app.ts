@@ -1,1 +1,3 @@
-console.log("")
+require("colors");
+
+console.log("Kachigga.".red);
