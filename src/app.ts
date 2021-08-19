@@ -1,6 +1,6 @@
 import colors from "colors";
 import { menu } from "./config/menus";
-import { guardarDb, leerDb } from "./helpers/guardarArchivo";
+import { guardarDb, leerDb } from "./helpers/datosLocales";
 import { leerInput, pausar } from "./helpers/inquirer";
 import { mostrarMenu } from "./helpers/mensajes";
 import { Tarea } from "./models/tarea";
