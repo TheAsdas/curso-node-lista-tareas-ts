@@ -27,6 +27,9 @@ class Tarea {
     return Object.keys(Tarea.listado).map((key) => Tarea.listado[key]);
   }
 
+  /**
+   * Arreglo con todas las tareas.
+   */
   static set todas(tareas: Tarea[]) {
     tareas.forEach((t) => (Tarea.listado[t.id] = t));
   }
@@ -54,14 +57,35 @@ class Tarea {
         `${i + 1}.`.yellow.bold,
         desc.white,
         "::".yellow.bold,
-        completadoEn ? "Completada".green.bold : "Pendiente".red.bold
+        completadoEn
+          ? `Completada el ${completadoEn}`.green.bold
+          : "Pendiente".red.bold
       )
     );
     console.log();
   }
 
+  /**
+   * # Borrar una tarea
+   * Borra la tarea cuya ID haya sido ingresada.
+   * @param id ID de la tarea a borar.
+   */
   static borrar(id: string) {
     if (Tarea.listado[id]) delete Tarea.listado[id];
+  }
+
+  /**
+   * # Alternas estado de las tareas
+   * Activa las tareas cuyos IDs fueron enviados en el parametro `ids`, y desactiva las tareas
+   * que cuyas IDs no estén en dicho arreglo.
+   * @param ids Lista de IDs de tareas completadas.
+   */
+  static alternar(ids: string[]) {
+    Tarea.todas.forEach((t) => {
+      if (ids.includes(t.id)) {
+        if (!t.completadoEn) t.completadoEn = new Date().toISOString();
+      } else t.completadoEn = false;
+    });
   }
 }
 

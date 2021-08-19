@@ -2,7 +2,7 @@ import inquirer from "inquirer";
 import Tarea from "../models/tarea";
 
 type MenuData = inquirer.QuestionCollection;
-type Choices = { value: any; name: string }[];
+type Choices = { value: any; name: string; checked?: boolean }[];
 
 const name = "respuesta";
 
@@ -94,6 +94,25 @@ export const confirmar = async (message: string): Promise<boolean> => {
   return respuesta;
 };
 
+export const cambiarEstado = async (tareas: Tarea[]): Promise<string[]> => {
+  const choices: Choices = tareas.map((t, i) => {
+    return {
+      value: t.id,
+      name: `${i + 1}. `.yellow.bold + t.desc,
+      checked: t.completadoEn ? true : false,
+    };
+  });
+
+  const { respuesta } = await inquirer.prompt({
+    type: "checkbox",
+    name,
+    message: "Borrar:",
+    choices,
+  });
+
+  return respuesta;
+};
+
 /**
  * # Crear línea separadora.
  * Crea una línea separadora de un largo especificado, o de largo 10 si
@@ -124,4 +143,3 @@ const mostrarCabecera = (titulo: string) => {
   console.log(`     ${titulo}     `.yellow.bold);
   console.log(separador(_largoTitulo + 10).yellow, "\n");
 };
-

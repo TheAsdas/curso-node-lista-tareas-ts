@@ -2,6 +2,7 @@ import colors from "colors";
 import { guardarDb, leerDb } from "./helpers/datosLocales";
 import {
   borrar,
+  cambiarEstado,
   confirmar,
   leer,
   listar,
@@ -15,12 +16,11 @@ colors;
 
 const main = async (args?: []) => {
   let continuar = true;
-  let opt;
 
   Tarea.todas = leerDb() ?? [];
   while (continuar) {
     console.clear();
-    switch ((opt = await principal())) {
+    switch (await principal()) {
       case 0 /* Salir */:
         continuar = false;
         pausar(`Tareas guardadas. Presiona  ${"ENTER".yellow} para salir.`);
@@ -43,6 +43,10 @@ const main = async (args?: []) => {
         await pausar();
         break;
       case 3 /* Cambiar estado */:
+        Tarea.alternar(await cambiarEstado(Tarea.todas));
+        await pausar(
+          `Tareas actualizadas. Presiona ${"ENTER".yellow} para continuar.`
+        );
         break;
       case 4 /* Borrar */:
         const id = await borrar(Tarea.todas);
