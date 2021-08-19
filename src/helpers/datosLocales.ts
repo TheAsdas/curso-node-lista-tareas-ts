@@ -1,5 +1,5 @@
 import { existsSync, readFileSync, writeFileSync } from "fs";
-import { Tarea } from "../models/tarea";
+import Tarea from "../models/tarea";
 
 const dir = "./db/data.json";
 

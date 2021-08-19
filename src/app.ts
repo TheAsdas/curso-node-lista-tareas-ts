@@ -1,40 +1,67 @@
 import colors from "colors";
-import { menu } from "./config/menus";
 import { guardarDb, leerDb } from "./helpers/datosLocales";
-import { leerInput, pausar } from "./helpers/inquirer";
-import { mostrarMenu } from "./helpers/mensajes";
-import { Tarea } from "./models/tarea";
+import {
+  borrar,
+  confirmar,
+  leer,
+  listar,
+  pausar,
+  principal,
+} from "./helpers/menus";
+
+import Tarea from "./models/tarea";
 
 colors;
-console.clear();
 
 const main = async (args?: []) => {
-  let opt = null;
+  let continuar = true;
+  let opt;
 
   Tarea.todas = leerDb() ?? [];
-
-  do {
-    opt = await mostrarMenu<number>(menu.principal, "Tareas: Menú Principal");
-
-    switch (opt) {
-      case 1:
-        //crear tarea
+  while (continuar) {
+    console.clear();
+    switch ((opt = await principal())) {
+      case 0 /* Salir */:
+        continuar = false;
+        pausar(`Tareas guardadas. Presiona  ${"ENTER".yellow} para salir.`);
+        break;
+      case 1 /* Crear */:
+        console.clear();
         Tarea.crearTarea(
-          await leerInput("Ingrese la descripción de la tarea:")
+          await leer(
+            "Ingrese la descripción de la tarea:",
+            "Tareas pendientes: agregar una tarea"
+          )
+        );
+        await pausar(
+          `Tarea agregada. Presiona ${"ENTER".yellow} para continuar.`
         );
         break;
-      case 2:
-        console.log(Tarea.todas);
+      case 2 /* Listar */:
+        console.clear();
+        Tarea.listar(await listar());
+        await pausar();
         break;
-      case 3:
+      case 3 /* Cambiar estado */:
+        break;
+      case 4 /* Borrar */:
+        const id = await borrar(Tarea.todas);
+        let seguro;
+
+        if (id) {
+          seguro = await confirmar("¿Estás seguro?");
+          if (seguro) Tarea.borrar(id);
+        }
+
+        await pausar(
+          (seguro ? `Tarea borrada exitosamente. ` : "Nada fue borrado. ") +
+            `Presiona ${"ENTER".yellow} para continuar.`
+        );
         break;
     }
-
-    if (opt !== 0) await pausar();
-  } while (opt !== 0);
+  }
 
   guardarDb(Tarea.todas);
-  //pausar();
 };
 
 main();
