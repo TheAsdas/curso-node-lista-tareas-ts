@@ -1,28 +1,32 @@
 import colors from "colors";
-import { MenuData, mostrarMenu, pausar } from "./helpers/mensajes";
+import { menu } from "./config/menus";
+import { mostrarMenu } from "./helpers/mensajes";
+import { Tarea } from "./models/tarea";
 
 colors;
 console.clear();
 
-const menu: { [key: string]: MenuData } = {
-  principal: {
-    titulo: "Tareas: Menú principal",
-    opciones: [
-      { nombre: "Crear tarea", accion: () => { return} },
-      { nombre: "Listar tareas", accion: () => {} },
-      { nombre: "Listar tareas completadas", accion: () => {} },
-      { nombre: "Listar tareas pendientes", accion: () => {} },
-      { nombre: "Completar tarea(s)", accion: () => {} },
-      { nombre: "Crear tarea", accion: () => {} },
-      { nombre: "Borrar tarea", accion: () => {}, cero: true },
-    ],
-  },
-};
-
 const main = async (args?: []) => {
-  console.log("Hola, mundo.".random);
-  mostrarMenu(menu.principal);
-  pausar();
+  let opt = null;
+  do {
+    opt = await mostrarMenu<number>(menu.principal, "Tareas: Menú Principal");
+    
+    switch (opt) {
+      case value:
+        
+        break;
+    
+      default:
+        break;
+    }
+
+    await mostrarMenu<void>(menu.pausa, "", {
+      cabecera: false,
+      limpiarPantalla: false,
+    });
+  } while (opt !== 0);
+
+  //pausar();
 };
 
 main();

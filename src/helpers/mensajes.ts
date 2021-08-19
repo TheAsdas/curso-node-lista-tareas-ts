@@ -1,3 +1,4 @@
+import inquirer from "inquirer";
 import readline from "readline";
 
 /* const io = readline.createInterface({
@@ -5,50 +6,35 @@ import readline from "readline";
   output: process.stdout,
 }); */
 
-export interface MenuData {
-  titulo: string;
-  opciones: {
-    nombre: string;
-    accion: (...args: any[]) => any | void;
-    cero?: boolean;
-  }[];
+interface iMenuOptions {
+  cabecera?: boolean;
+  limpiarPantalla?: boolean;
 }
 
-export const mostrarMenu = (data: MenuData) => {
-  const _largoTitulo = data.titulo.length;
-  console.clear();
-  console.log(separador(_largoTitulo + 10).yellow);
-  console.log(`     ${data.titulo}     `.yellow.bold);
-  console.log(separador(_largoTitulo + 10).yellow, "\n");
-
-  data.opciones.forEach((o, i) => {
-    const { cero, nombre } = o;
-    console.log(cero ? "0.".green.bold : `${i + 1}.`.green.bold, nombre.white);
-  });
-
-  const io = readline.createInterface({
-    input: process.stdin,
-    output: process.stdout,
-  });
-
-  io.question("Selecciona una opción: \n> ", (opt) => {
-    io.close();
-  });
-};
-
 /**
- * # Pausar aplicación
- * Pausa la ejecucción del programa hasta que el usuario presione ENTER para continuar.
+ * # Inquirer menu
+ * Muestra un menu de inquirer.
+ * @param menuOpts Opciones del menú.
+ * @param titulo Título de la cabecera.
+ * @param cabecera Mostrar o no la cabecera. Por defecto la muestra.
+ * @returns La opción seleccionada por el usuario en el menú.
  */
-export const pausar = () => {
-  const io = readline.createInterface({
-    input: process.stdin,
-    output: process.stdout,
-  });
-  
-  io.question(`Presiona ${"ENTER".green} para continuar...`, (opt) => {
-    io.close();
-  });
+export const mostrarMenu = async <T>(
+  menuOpts: inquirer.QuestionCollection,
+  titulo?: string,
+  opciones: iMenuOptions = {
+    limpiarPantalla: true,
+    cabecera: true,
+  }
+): Promise<T> => {
+  const { limpiarPantalla, cabecera } = opciones;
+
+  if (limpiarPantalla) console.clear();
+  if (cabecera) mostrarCabecera(titulo);
+
+  const { respuesta } = await inquirer.prompt(menuOpts);
+
+  return respuesta;
 };
 
 /**
@@ -66,4 +52,13 @@ const separador = (largo = 10) => {
   }
 
   return linea;
+};
+
+const mostrarCabecera = (titulo: string = "Seleccione una opción:") => {
+  const _largoTitulo = titulo.length;
+
+  console.clear();
+  console.log(separador(_largoTitulo + 10).yellow);
+  console.log(`     ${titulo}     `.yellow.bold);
+  console.log(separador(_largoTitulo + 10).yellow, "\n");
 };
