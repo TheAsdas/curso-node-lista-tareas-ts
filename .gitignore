@@ -1,6 +1,8 @@
 #output
 /output/*
 !/output/README.md
+/db/*
+!/db/README.md
 
 #node Modules
 /node_modules
